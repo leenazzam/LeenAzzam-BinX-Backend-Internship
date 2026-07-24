@@ -1,0 +1,15 @@
+D:\Documents\Courses\binx\w1\d3\ConsoleApp3\ConsoleApp3\bin\Debug\net11.0\ConsoleApp3.exe
+D:\Documents\Courses\binx\w1\d3\ConsoleApp3\ConsoleApp3\bin\Debug\net11.0\ConsoleApp3.deps.json
+D:\Documents\Courses\binx\w1\d3\ConsoleApp3\ConsoleApp3\bin\Debug\net11.0\ConsoleApp3.runtimeconfig.json
+D:\Documents\Courses\binx\w1\d3\ConsoleApp3\ConsoleApp3\bin\Debug\net11.0\ConsoleApp3.dll
+D:\Documents\Courses\binx\w1\d3\ConsoleApp3\ConsoleApp3\bin\Debug\net11.0\ConsoleApp3.pdb
+D:\Documents\Courses\binx\w1\d3\ConsoleApp3\ConsoleApp3\obj\Debug\net11.0\ConsoleApp3.GeneratedMSBuildEditorConfig.editorconfig
+D:\Documents\Courses\binx\w1\d3\ConsoleApp3\ConsoleApp3\obj\Debug\net11.0\ConsoleApp3.AssemblyInfoInputs.cache
+D:\Documents\Courses\binx\w1\d3\ConsoleApp3\ConsoleApp3\obj\Debug\net11.0\ConsoleApp3.AssemblyInfo.cs
+D:\Documents\Courses\binx\w1\d3\ConsoleApp3\ConsoleApp3\obj\Debug\net11.0\ConsoleApp3.csproj.CoreCompileInputs.cache
+D:\Documents\Courses\binx\w1\d3\ConsoleApp3\ConsoleApp3\obj\Debug\net11.0\ConsoleApp3.sourcelink.json
+D:\Documents\Courses\binx\w1\d3\ConsoleApp3\ConsoleApp3\obj\Debug\net11.0\ConsoleApp3.dll
+D:\Documents\Courses\binx\w1\d3\ConsoleApp3\ConsoleApp3\obj\Debug\net11.0\refint\ConsoleApp3.dll
+D:\Documents\Courses\binx\w1\d3\ConsoleApp3\ConsoleApp3\obj\Debug\net11.0\ConsoleApp3.pdb
+D:\Documents\Courses\binx\w1\d3\ConsoleApp3\ConsoleApp3\obj\Debug\net11.0\ConsoleApp3.genruntimeconfig.cache
+D:\Documents\Courses\binx\w1\d3\ConsoleApp3\ConsoleApp3\obj\Debug\net11.0\ref\ConsoleApp3.dll
