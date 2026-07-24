@@ -10,4 +10,4 @@ I defined an interface, INotifiable, implemented by two unrelated classes, and w
 
 I committed the domain model to my GitHub repository with a clear commit message.
 
-![alt text](image.png)
+<img width="1622" height="715" alt="image" src="https://github.com/user-attachments/assets/d64bd35d-56ba-44a0-9703-e5f821ca350e" />
