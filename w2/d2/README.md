@@ -1,4 +1,5 @@
-Week 2 - Day 2: Advanced LINQ & Deferred Execution
+# Week 2 - Day 2: Advanced LINQ & Deferred Execution
+
 Learned the difference between deferred and immediate execution in LINQ.
 Used GroupBy and Join to group and combine data.
 Used SelectMany to flatten nested collections.
