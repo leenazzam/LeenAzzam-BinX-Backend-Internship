@@ -1,1 +1,3 @@
-# Leen-Azzam-BinX-Backend-Internship
+# Day 5: Middleware Pipeline & Dependency Injection
+
+Today involved adding a custom middleware (SimpleMiddleware) that logs each incoming request's method and path to the console, along with hands-on testing of how middleware pipeline order affects execution. An IMessageService interface and its MessageService implementation were created and registered in the DI container with a Scoped lifetime, then injected into ItemsController via constructor injection and used in a new endpoint (/api/items/message). A .NET version compatibility issue was also resolved (pinning SDK 9.0.316 via a global.json file) after a conflict arose from a .NET 11 preview version.
