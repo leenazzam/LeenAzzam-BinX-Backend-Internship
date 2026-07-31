@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\Documents\\Courses\\binx\\w1\\d1\\d1\\d1.csproj": {}
+    "D:\\Documents\\Courses\\binx\\w1\\d1\\d1\\d1.csproj": {}
   },
   "projects": {
-    "d:\\Documents\\Courses\\binx\\w1\\d1\\d1\\d1.csproj": {
+    "D:\\Documents\\Courses\\binx\\w1\\d1\\d1\\d1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\Documents\\Courses\\binx\\w1\\d1\\d1\\d1.csproj",
+        "projectUniqueName": "D:\\Documents\\Courses\\binx\\w1\\d1\\d1\\d1.csproj",
         "projectName": "d1",
-        "projectPath": "d:\\Documents\\Courses\\binx\\w1\\d1\\d1\\d1.csproj",
+        "projectPath": "D:\\Documents\\Courses\\binx\\w1\\d1\\d1\\d1.csproj",
         "packagesPath": "C:\\Users\\HPCO\\.nuget\\packages\\",
-        "outputPath": "d:\\Documents\\Courses\\binx\\w1\\d1\\d1\\obj\\",
+        "outputPath": "D:\\Documents\\Courses\\binx\\w1\\d1\\d1\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
