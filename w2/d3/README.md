@@ -1,0 +1,3 @@
+# Day 3 — Async/Await & Concurrency
+
+This lab demonstrates async/await in C#: three simulated data-source calls are run sequentially (awaited one by one, total time = sum of all delays), then the same calls are run concurrently using Task.WhenAll (started together, total time = slowest delay only). A CancellationToken is also used to cancel a long-running task mid-operation, showing how to stop wasted work early.
