@@ -1,3 +1,3 @@
-# Day 5: Middleware Pipeline & Dependency Injection
+# Week 2
 
-Today involved adding a custom middleware (SimpleMiddleware) that logs each incoming request's method and path to the console, along with hands-on testing of how middleware pipeline order affects execution. An IMessageService interface and its MessageService implementation were created and registered in the DI container with a Scoped lifetime, then injected into ItemsController via constructor injection and used in a new endpoint (/api/items/message). A .NET version compatibility issue was also resolved (pinning SDK 9.0.316 via a global.json file) after a conflict arose from a .NET 11 preview version.
+This week I learned Generics, LINQ, and async/await in C#. Then I built my first ASP.NET Core Web API (MyFirstApi) with both Controllers and Minimal APIs, added custom middleware to log requests, and used Dependency Injection to inject a service into my controller. I also fixed a .NET version conflict using global.json, and tested everything with Postman.
