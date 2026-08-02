@@ -1,4 +1,4 @@
-# \# Day 1 — REST API Design Principles
+#  Day 1 — REST API Design Principles
 
 # 
 
