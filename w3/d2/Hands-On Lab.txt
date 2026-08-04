@@ -1,0 +1,32 @@
+Project: name, description, created date
+Task: title, status, due date, belongs to a project
+User: name, email
+
+Task can be assigned to multiple users, and a user can have multiple tasks -> many-to-many
+--------------------
+1NF check: no comma-separated lists, split into a join table instead.
+3NF check: a task's project name doesn't get stored on the Task table itself  only ProjectId (FK). The project's full name lives once, on the Projects table.
+-----------------------
+Projects(Id PK, Name, Description, CreatedDate)
+
+Tasks(Id PK, Title, Status, DueDate, ProjectId FK -> Projects.Id)
+
+Users(Id PK, Name, Email)
+
+TaskAssignments(Id PK, TaskId FK -> Tasks.Id, UserId FK -> Users.Id)   -- join table for many-to-many
+-------------------------
+ERP photo
+-------------------------
+Column Types
+
+Id -> int
+Name -> nvarchar(100)
+Description -> nvarchar(500)
+Title -> nvarchar(100)
+Status -> nvarchar(50)
+Email -> nvarchar(255)
+CreatedDate -> datetime
+DueDate -> datetime
+ProjectId -> int
+TaskId -> int
+UserId -> int
