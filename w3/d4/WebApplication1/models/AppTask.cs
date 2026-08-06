@@ -15,6 +15,6 @@
         public int ProjectId { get; set; }
 
         // Navigation Property
-        public Project? Project { get; set; }
+        public Project Project { get; set; }
     }
 }

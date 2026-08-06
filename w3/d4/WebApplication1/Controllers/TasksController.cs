@@ -21,9 +21,7 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppTask>>> GetTasks()
         {
-            return await _context.Tasks
-                .Include(t => t.Project)
-                .ToListAsync();
+            return await _context.Tasks.ToListAsync();
         }
 
 
@@ -52,40 +50,6 @@ namespace WebApplication1.Controllers
                 new { id = task.Id },
                 task
             );
-        }
-
-        // PUT: api/tasks/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTask(int id, AppTask updatedTask)
-        {
-            var task = await _context.Tasks.FindAsync(id);
-            if (task == null)
-                return NotFound();
-
-            task.Title = updatedTask.Title;
-            task.Status = updatedTask.Status;
-            task.DueDate = updatedTask.DueDate;
-
-            await _context.SaveChangesAsync();
-            return NoContent();
-        }
-
-        // DELETE: api/tasks/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTask(int id)
-        {
-
-            var task = await _context.Tasks.FindAsync(id);
-
-            if (task == null)
-                return NotFound();
-
-            _context.Tasks.Remove(task);
-
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-
         }
     }
 }
