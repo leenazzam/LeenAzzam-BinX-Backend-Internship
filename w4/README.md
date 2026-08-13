@@ -6,7 +6,7 @@ role-based authorization, input validation, and API hardening.
 **Sequence:** `Identity → JWT → Authorization → Validation → Hardening`
 
 ## 🟢 Day 1 — ASP.NET Core Identity & User Registration
-[View Day 1](./w4/d1)
+[View Day 1](https://github.com/leenazzam/LeenAzzam-BinX-Backend-Internship/tree/main/w4/d1)
 
 - Added Identity NuGet packages; `AppDbContext` now inherits `IdentityDbContext`
 - Added Identity tables via EF Core migration
@@ -15,7 +15,7 @@ role-based authorization, input validation, and API hardening.
 - Tested valid registration and a weak-password rejection
 
 ## 🔵 Day 2 — JWT Authentication
-[View Day 2](./w4/d2)
+[View Day 2](https://github.com/leenazzam/LeenAzzam-BinX-Backend-Internship/tree/main/w4/d2)
 
 - Login endpoint verifies credentials via Identity
 - Issues a signed JWT with user claims (ID, email) on success
@@ -23,7 +23,7 @@ role-based authorization, input validation, and API hardening.
 - Tested valid/invalid logins and confirmed expired tokens are rejected
 
 ## 🟡 Day 3 — Authorization & Role-Based Access Control
-[View Day 3](./w4/d3)
+[View Day 3](https://github.com/leenazzam/LeenAzzam-BinX-Backend-Internship/tree/main/w4/d3)
 
 - Protected controllers with `[Authorize]`
 - Created `User` and `Admin` roles; assigned via Identity
@@ -32,7 +32,7 @@ role-based authorization, input validation, and API hardening.
 - Confirmed `401 Unauthorized` (no/invalid token) vs `403 Forbidden` (wrong role)
 
 ## 🟠 Day 4 — Input Validation with FluentValidation
-[View Day 4](./w4/d4)
+[View Day 4](https://github.com/leenazzam/LeenAzzam-BinX-Backend-Internship/tree/main/w4/d4)
 
 - Installed FluentValidation + ASP.NET Core integration
 - Wrote validators for Create/Update requests with real business rules
@@ -41,7 +41,7 @@ role-based authorization, input validation, and API hardening.
 - Invalid requests return structured `400 Bad Request` errors
 
 ## 🔴 Day 5 — API Security & Hardening
-[View Day 5](./w4/d5)
+[View Day 5](https://github.com/leenazzam/LeenAzzam-BinX-Backend-Internship/tree/main/w4/d5)
 
 - **Rate limiting:** stricter limit on login vs general endpoints (brute-force protection)
 - **CORS:** named policy allowing only the intended frontend origin
