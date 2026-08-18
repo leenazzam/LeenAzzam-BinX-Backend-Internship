@@ -4,10 +4,26 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using CardiacPatientMonitoring.Data;
+using CardiacPatientMonitoring.Models;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000", "https://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
 
 builder.Services.AddControllers();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -82,6 +98,24 @@ builder.Services
     });
 
 builder.Services.AddAuthorization();
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = 429;
+
+    options.AddFixedWindowLimiter("LoginPolicy", opt =>
+    {
+        opt.PermitLimit = 5;
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.QueueLimit = 0;
+    });
+
+    options.AddFixedWindowLimiter("GeneralPolicy", opt =>
+    {
+        opt.PermitLimit = 100;
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.QueueLimit = 0;
+    });
+});
 
 var app = builder.Build();using (var scope = app.Services.CreateScope())
 {
@@ -129,21 +163,104 @@ var app = builder.Build();using (var scope = app.Services.CreateScope())
             );
         }
     }
-}
+        var context = services.GetRequiredService<AppDbContext>();
 
+    if (!context.Patients.Any())
+    {
+        var patient1 = new Patient
+        {
+            FullName = "Ahmad Youssef",
+            Age = 55,
+            Gender = "Male",
+            PhoneNumber = "0599111222"
+        };
+
+        var patient2 = new Patient
+        {
+            FullName = "Sara Khalil",
+            Age = 62,
+            Gender = "Female",
+            PhoneNumber = "0599333444"
+        };
+
+        context.Patients.AddRange(patient1, patient2);
+        context.SaveChanges();
+
+        context.VitalSigns.AddRange(
+            new VitalSign
+            {
+                PatientId = patient1.Id,
+                HeartRate = 78,
+                BloodPressure = "120/80",
+                OxygenLevel = 97,
+                RecordedAt = DateTime.UtcNow
+            },
+            new VitalSign
+            {
+                PatientId = patient2.Id,
+                HeartRate = 85,
+                BloodPressure = "130/85",
+                OxygenLevel = 95,
+                RecordedAt = DateTime.UtcNow
+            }
+        );
+
+        context.Medications.AddRange(
+            new Medication
+            {
+                PatientId = patient1.Id,
+                Name = "Aspirin",
+                Dosage = "100mg",
+                Frequency = "Once daily"
+            },
+            new Medication
+            {
+                PatientId = patient2.Id,
+                Name = "Metoprolol",
+                Dosage = "50mg",
+                Frequency = "Twice daily"
+            }
+        );
+
+        context.Appointments.AddRange(
+            new Appointment
+            {
+                PatientId = patient1.Id,
+                AppointmentDate = DateTime.UtcNow.AddDays(7),
+                DoctorName = "Dr. Layla Hassan",
+                Notes = "Follow up checkup"
+            },
+            new Appointment
+            {
+                PatientId = patient2.Id,
+                AppointmentDate = DateTime.UtcNow.AddDays(10),
+                DoctorName = "Dr. Omar Nasser",
+                Notes = "Routine cardiac evaluation"
+            }
+        );
+
+        context.SaveChanges();
+    }
+}
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    app.UseHsts();
+}
 
 app.UseHttpsRedirection();
 
-// Authentication MUST come before Authorization
+app.UseCors("AllowFrontend");
+
+app.UseRateLimiter();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
 app.Run();

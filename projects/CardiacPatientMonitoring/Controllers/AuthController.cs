@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -79,6 +80,7 @@ await _userManager.AddToRoleAsync(user, "Patient");
 
 
     // POST: api/auth/login
+    [EnableRateLimiting("LoginPolicy")]
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
