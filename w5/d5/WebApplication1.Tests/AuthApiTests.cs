@@ -4,15 +4,12 @@ using Xunit;
 
 public class AuthApiTests : IClassFixture<CustomWebApplicationFactory>
 {
+    private readonly HttpClient _client;
 
-   private readonly CustomWebApplicationFactory _factory;
-private readonly HttpClient _client;
-
-public AuthApiTests(CustomWebApplicationFactory factory)
-{
-    _factory = factory;
-    _client = factory.CreateClient();
-}
+    public AuthApiTests(CustomWebApplicationFactory factory)
+    {
+        _client = factory.CreateClient();
+    }
 
     [Fact]
     public async Task Login_ValidCredentials_ReturnsOkWithToken()
@@ -28,7 +25,9 @@ public AuthApiTests(CustomWebApplicationFactory factory)
                 Password = password
             });
 
-        Assert.Equal(HttpStatusCode.OK, registerResponse.StatusCode);
+        Assert.Equal(
+            HttpStatusCode.OK,
+            registerResponse.StatusCode);
 
         var loginResponse = await _client.PostAsJsonAsync(
             "/api/auth/login",
@@ -38,12 +37,15 @@ public AuthApiTests(CustomWebApplicationFactory factory)
                 Password = password
             });
 
-        Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
+        Assert.Equal(
+            HttpStatusCode.OK,
+            loginResponse.StatusCode);
 
         var result = await loginResponse.Content
             .ReadFromJsonAsync<LoginResult>();
 
-        Assert.False(string.IsNullOrEmpty(result?.Token));
+        Assert.False(
+            string.IsNullOrEmpty(result?.Token));
     }
 
     [Fact]
@@ -57,6 +59,8 @@ public AuthApiTests(CustomWebApplicationFactory factory)
                 Password = "WrongPassword!"
             });
 
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        Assert.Equal(
+            HttpStatusCode.Unauthorized,
+            response.StatusCode);
     }
 }

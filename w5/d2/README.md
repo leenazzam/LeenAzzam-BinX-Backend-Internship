@@ -1,3 +1,4 @@
+
 # Day 2 – Mocking Dependencies with Moq
 
 This day focused on isolating unit tests from real dependencies using Moq. An ITaskRepository interface and its real implementation TaskRepository were added, followed by a new TaskService that depends on the interface instead of AppDbContext directly. This made it possible to mock the repository in tests instead of using a real database.
