@@ -2,7 +2,8 @@
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using WebApplication1.models;
-using Xunit;
+using Xunit;using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
 public class TasksApiTests : IClassFixture<CustomWebApplicationFactory>
 {
@@ -13,33 +14,64 @@ public class TasksApiTests : IClassFixture<CustomWebApplicationFactory>
         _factory = factory;
     }
 
-    private async Task<HttpClient> GetAuthenticatedClientAsync()
+   private async Task<HttpClient> GetAuthenticatedClientAsync()
+{
+    var client = _factory.CreateClient();
+
+    using var scope = _factory.Services.CreateScope();
+
+    var roleManager =
+        scope.ServiceProvider
+            .GetRequiredService<RoleManager<IdentityRole>>();
+
+    if (!await roleManager.RoleExistsAsync("User"))
     {
-        var client = _factory.CreateClient();
+        await roleManager.CreateAsync(
+            new IdentityRole("User"));
+    }
 
-        var email = $"testuser_{Guid.NewGuid()}@example.com";
-        var password = "TestPass123!";
+    if (!await roleManager.RoleExistsAsync("Admin"))
+    {
+        await roleManager.CreateAsync(
+            new IdentityRole("Admin"));
+    }
 
-        await client.PostAsJsonAsync("/api/auth/register", new
-        {
-            Email = email,
-            Password = password
-        });
+    var email =
+        $"testuser_{Guid.NewGuid()}@example.com";
 
-        var loginResponse = await client.PostAsJsonAsync("/api/auth/login", new
-        {
-            Email = email,
-            Password = password
-        });
+    var password = "TestPass123!";
 
-        var loginResult = await loginResponse.Content
+    var registerResponse =
+        await client.PostAsJsonAsync(
+            "/api/auth/register",
+            new
+            {
+                Email = email,
+                Password = password
+            });
+
+    var loginResponse =
+        await client.PostAsJsonAsync(
+            "/api/auth/login",
+            new
+            {
+                Email = email,
+                Password = password
+            });
+
+    loginResponse.EnsureSuccessStatusCode();
+
+    var loginResult =
+        await loginResponse.Content
             .ReadFromJsonAsync<LoginResult>();
 
-        client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", loginResult!.Token);
+    client.DefaultRequestHeaders.Authorization =
+        new AuthenticationHeaderValue(
+            "Bearer",
+            loginResult!.Token);
 
-        return client;
-    }
+    return client;
+}
 
     [Fact]
     public async Task GetTask_ReturnsOkAndTask_WhenTaskExists()

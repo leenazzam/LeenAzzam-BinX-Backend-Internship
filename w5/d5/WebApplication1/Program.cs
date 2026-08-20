@@ -156,65 +156,57 @@ app.UseExceptionHandler(errorApp =>
     });
 });
 // Create User and Admin roles
+// Seed Identity roles and admin user
 if (app.Environment.IsDevelopment())
 {
-    // Create User and Admin roles
-    using (var scope = app.Services.CreateScope())
+    using var scope = app.Services.CreateScope();
+
+    var roleManager = scope.ServiceProvider
+        .GetRequiredService<RoleManager<IdentityRole>>();
+
+    string[] roles = { "User", "Admin" };
+
+    foreach (var role in roles)
     {
-        var roleManager = scope.ServiceProvider
-            .GetRequiredService<RoleManager<IdentityRole>>();
-
-        string[] roles = { "User", "Admin" };
-
-        foreach (var role in roles)
+        if (!await roleManager.RoleExistsAsync(role))
         {
-            if (!await roleManager.RoleExistsAsync(role))
-            {
-                await roleManager.CreateAsync(new IdentityRole(role));
-            }
+            await roleManager.CreateAsync(new IdentityRole(role));
         }
     }
 
-    // Create Admin user
-    using (var scope = app.Services.CreateScope())
+    var userManager = scope.ServiceProvider
+        .GetRequiredService<UserManager<IdentityUser>>();
+
+    var adminEmail = "admin@example.com";
+    var adminPassword = "Admin123!";
+
+    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
+    if (adminUser == null)
     {
-        var userManager = scope.ServiceProvider
-            .GetRequiredService<UserManager<IdentityUser>>();
-
-        var adminEmail = "admin@example.com";
-        var adminPassword = "Admin123!";
-
-        var adminUser = await userManager.FindByEmailAsync(adminEmail);
-
-        if (adminUser == null)
+        adminUser = new IdentityUser
         {
-            adminUser = new IdentityUser
-            {
-                UserName = adminEmail,
-                Email = adminEmail,
-                EmailConfirmed = true
-            };
+            UserName = adminEmail,
+            Email = adminEmail,
+            EmailConfirmed = true
+        };
 
-            var result = await userManager.CreateAsync(
-                adminUser,
-                adminPassword
-            );
+        var result = await userManager.CreateAsync(
+            adminUser,
+            adminPassword);
 
-            if (result.Succeeded)
-            {
-                await userManager.AddToRoleAsync(
-                    adminUser,
-                    "Admin"
-                );
-            }
-        }
-        else if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
+        if (result.Succeeded)
         {
             await userManager.AddToRoleAsync(
                 adminUser,
-                "Admin"
-            );
+                "Admin");
         }
+    }
+    else if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
+    {
+        await userManager.AddToRoleAsync(
+            adminUser,
+            "Admin");
     }
 }
 if (app.Environment.IsDevelopment())
@@ -226,8 +218,10 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseHsts();
 }
-app.UseHttpsRedirection();
-app.Use(async (context, next) =>
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    app.UseHttpsRedirection();
+}app.Use(async (context, next) =>
 {
     context.Response.Headers["X-Content-Type-Options"] = "nosniff";
     context.Response.Headers["X-Frame-Options"] = "DENY";

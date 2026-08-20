@@ -1,18 +1,34 @@
 
-# Week 5 — Day 4: Centralized Exception Handling
+# Day 5 — Testing & Week 5 Wrap-up
 
-Today I implemented centralized exception handling using `UseExceptionHandler` in `Program.cs`.
+Today I applied the testing practices to the project and completed the Week 5 testing setup.
 
-### What I Did
+### Testing
 
-* Centralized unhandled exception handling instead of using `try-catch` in every endpoint.
-* Returned a standardized `ProblemDetails` response with HTTP `500`.
-* Prevented exception messages and stack traces from being exposed to clients.
-* Added `ILogger` to log the full exception and request path server-side.
-* Tested the handler using a temporary endpoint that intentionally threw an exception.
+* Added **unit tests** using xUnit and Moq for important authentication scenarios.
+* Added **integration tests** using `WebApplicationFactory`.
+* Used an **In-Memory database** for integration testing.
+* Configured `User` and `Admin` roles in the test environment.
+* Tested successful and failed login scenarios.
+* Ran the full test suite using `dotnet test`.
 
-![Swagger 500](image.png)
+### Test Result
 
-![Test Code 500](image-1.png)
+```text
+Total: 17
+Passed: 17
+Failed: 0
+Skipped: 0
+```
 
-After verifying the response and logging, I removed the test endpoint and cleaned up unnecessary `try-catch` blocks from the controllers.
+### Week 5 Completion
+
+Week 5 testing and error-handling requirements are completed. The project is ready for **Phase 3 — Sprint 1**.
+
+### Screenshots
+![Full test suite](image-1.png)
+
+![Unit tests](image-2.png)
+
+![Integration tests](image-3.png)
+
