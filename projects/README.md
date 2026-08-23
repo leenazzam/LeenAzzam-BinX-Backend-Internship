@@ -65,33 +65,51 @@ Email: admin@cardiac.com
 Password: Admin123!
 ```
 
-* **Admin**: Full access, including managing patients and deleting records.
-* **Doctor**: Can manage vital signs, medications, and appointments.
-* **Patient**: Can view their permitted healthcare data.
+* **Admin:** Full access, including managing patients and deleting records.
+* **Doctor:** Can manage vital signs, medications, and appointments.
+* **Patient:** Can view their permitted healthcare data.
 
-New users registered through the normal registration endpoint are assigned the Patient role automatically. Doctor accounts can only be created by an Admin.
+New users registered through the normal registration endpoint are assigned the **Patient** role automatically.
+
+Doctor accounts can only be created by an Admin.
+
+### Patient Registration
+
+A new account is registered through the normal registration endpoint and is automatically assigned the Patient role.
+
+![Patient Registration](image.png)
+
+### Admin Login
+
+The seeded Admin account is used to log in and receive a JWT token.
+
+![Admin Login](image-1.png)
+
+### JWT Authorization
+
+The returned JWT token is added through Swagger's **Authorize** button and is then used for protected requests.
+
+![JWT Authorization](image-2.png)
 
 ## Roles & Permissions by Module
 
-| Module       | GET all / GET by id    | POST          | PUT           | DELETE |
-| ------------ | ---------------------- | ------------- | ------------- | ------ |
-| Patients     | Admin, Doctor          | Admin         | Admin         | Admin  |
-| VitalSigns   | Admin, Doctor, Patient | Admin, Doctor | Admin, Doctor | Admin  |
-| Medications  | Admin, Doctor, Patient | Admin, Doctor | Admin, Doctor | Admin  |
-| Appointments | Admin, Doctor, Patient | Admin, Doctor | Admin, Doctor | Admin  |
+| Module | GET all / GET by id | POST | PUT | DELETE |
+|---|---|---|---|---|
+| Patients | Admin, Doctor | Admin | Admin | Admin |
+| VitalSigns | Admin, Doctor, Patient | Admin, Doctor | Admin, Doctor | Admin |
+| Medications | Admin, Doctor, Patient | Admin, Doctor | Admin, Doctor | Admin |
+| Appointments | Admin, Doctor, Patient | Admin, Doctor | Admin, Doctor | Admin |
 
 ## Validation & Security
 
-Create and Update requests are validated using **FluentValidation**.
-
+Create and Update requests are validated using FluentValidation.
 Invalid data, such as an invalid age, phone number, heart rate, or past appointment date, returns a structured `400 Bad Request`.
 
 The login endpoint is also protected with rate limiting. After 5 attempts per minute, additional requests return `429 Too Many Requests`.
 
-## API Testing
+## Testing
 
 The API was tested through Swagger using Admin, Doctor, and Patient accounts.
-
 The testing covered:
 
 * Authentication and JWT tokens
@@ -147,109 +165,77 @@ Sending intentionally invalid data, such as an age outside the allowed range or 
 
 ![FluentValidation](image-9.png)
 
-Sending repeated login requests quickly triggers the rate limiter, returning a `429` after the fifth attempt within a minute.
+### Login Rate Limiting
+
+The login endpoint is protected with rate limiting.
+
+After **5 attempts per minute**, additional login attempts return:
+
+`429 Too Many Requests`
 
 ![Rate Limiting](image-10.png)
 
-The same CRUD pattern was verified across the other modules. Creating a vital sign record succeeds as expected.
+## Vital Signs
 
-![POST /api/vitalsigns](image-11.png)
+### Create Vital Sign
 
-Fetching all vital sign records confirms the new record is present.
+Admin and Doctor users can create vital sign records.
 
-![GET /api/vitalsigns](image-12.png)
+![Create Vital Sign](image-11.png)
 
-Sending a heart rate outside the valid range correctly triggers a validation error.
+### Get Vital Signs
 
-![heartRate out of range validation](image-13.png)
+Vital sign records can be retrieved through the GET endpoint.
 
-Creating a medication record succeeds the same way.
+![Get Vital Signs](image-12.png)
 
-![POST /api/medications](image-14.png)
+### Vital Sign Validation
 
-Creating an appointment with a future date also succeeds.
+An invalid heart rate is rejected by FluentValidation.
 
-![POST /api/appointments](image-15.png)
+![Heart Rate Validation](image-13.png)
 
-To verify the Doctor role specifically, an Admin account was used to create a Doctor account through the create-doctor endpoint.
+## Medications
 
-![POST /api/auth/create-doctor](image-16.png)
+Admin and Doctor users can create medication records.
 
-That Doctor account was then used to log in and obtain its own token.
+![Create Medication](image-14.png)
 
-![doctor login](image-17.png)
+## Appointments
 
-A second account was registered normally to represent a Patient.
+Admin and Doctor users can create appointments.
 
-![patient register](image-18.png)
+A future appointment date is accepted successfully.
 
-Logging in as that Patient and attempting a restricted action correctly returns `403`.
+![Create Appointment](image-15.png)
 
-![patient 403](image-19.png)
+## Doctor Role
 
-Finally, logging in as the Doctor and attempting to create a patient, an action reserved for Admin only, also correctly returns `403`, confirming the role boundaries between Admin and Doctor are enforced as intended.
+An Admin can create a Doctor account through the `create-doctor` endpoint.
+
+![Create Doctor](image-16.png)
+
+The new Doctor account can then log in and receive its own JWT token.
+
+![Doctor Login](image-17.png)
+
+## Patient Role Testing
+
+A second account is registered normally and is assigned the Patient role automatically.
+
+![Patient Registration](image-18.png)
+
+The Patient then attempts a restricted operation and receives `403 Forbidden`.
+
+![Patient 403](image-19.png)
+
+## Doctor Authorization Testing
+
+The Doctor attempts to create a Patient, but this operation is restricted to Admin users.
+
+The API correctly returns `403 Forbidden`, confirming that the role boundaries are enforced.
 
 ![doctor 403 in post patient](image-20.png)
-
-## Automated Testing
-
-The project includes automated tests using **xUnit, Moq, and WebApplicationFactory**.
-
-### Unit Tests — xUnit
-
-Unit tests cover the VitalSign validation rules and verify both valid and invalid input scenarios.
-
-The tests include cases such as valid heart rate values and invalid values outside the allowed range.
-
-
-![xUnit Unit Tests](image-21.png)
-
-### Mocking — Moq
-
-Moq is used to isolate the VitalSign service logic from external dependencies and test the service behavior independently.
-
-
-![Moq Service Tests](image-22.png)
-
-### Integration Tests — WebApplicationFactory
-
-Integration tests use `WebApplicationFactory` with an in-memory database to test the API through HTTP requests.
-
-The tests cover authentication and authorization scenarios, including:
-
-* Unauthenticated requests returning `401 Unauthorized`
-* Successful Admin authentication
-* Authorized Admin access returning `200 OK`
-* Patient users being denied restricted operations with `403 Forbidden`
-
-![Integration Tests](image-23.png)
-
-### Test Results
-
-The complete automated test suite was executed using:
-
-```bash
-dotnet test
-```
-
-All tests passed successfully.
-
-![Test Results - 15 Passed](image-24.png)
-
-## Error Handling
-
-Unhandled exceptions are handled centrally using ASP.NET Core's `UseExceptionHandler`.
-
-When an unexpected exception occurs:
-
-* The exception is caught by the centralized exception handler.
-* Full exception details are logged server-side using `ILogger`.
-* The client receives a standardized `ProblemDetails` response.
-* Internal exception messages and stack traces are not exposed to the client.
-
-![Centralized Error Handling](image-25.png)
-
-This provides consistent and safe error responses across the API while keeping internal implementation details protected.
 
 ## Project Structure
 
@@ -269,4 +255,4 @@ CardiacPatientMonitoring/
 
 ## Summary
 
-This project demonstrates building a secure and structured healthcare REST API using ASP.NET Core, with database management through EF Core, authentication using JWT, role-based authorization, validation, automated testing with xUnit and Moq, integration testing with WebApplicationFactory, centralized error handling with ProblemDetails, and API testing through Swagger.
+This project demonstrates building a secure and structured healthcare REST API using ASP.NET Core, with database management through EF Core, authentication using JWT, role-based authorization, validation, and API testing through Swagger.
