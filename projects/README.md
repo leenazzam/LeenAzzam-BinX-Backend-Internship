@@ -1,335 +1,354 @@
-**# Cardiac Patient Monitoring System**
+# Cardiac Patient Monitoring System
 
 A REST API for managing cardiac patients, vital signs, medications, and appointments.
 
-The project is built using **\*\*ASP.NET Core, Entity Framework Core, and SQL Server LocalDB\*\***.
+The project is built using **ASP.NET Core, Entity Framework Core, and SQL Server LocalDB**.
 
-**## Technologies**
+## Technologies
 
-\* ASP.NET Core Web API
+* ASP.NET Core Web API
+* Entity Framework Core
+* SQL Server LocalDB
+* ASP.NET Core Identity
+* JWT Authentication
+* FluentValidation
+* xUnit
+* Moq
+* WebApplicationFactory
+* Swagger / OpenAPI
+* CORS
+* Rate Limiting
 
-\* Entity Framework Core
+## Main Features
 
-\* SQL Server LocalDB
+* Patient, Vital Sign, Medication, and Appointment management
+* JWT authentication and role-based authorization
+* Three roles: **Admin, Doctor, Patient**
+* DTOs for API requests and responses
+* FluentValidation for input validation
+* Login rate limiting
+* Database migrations and seed data
+* Swagger for API testing
+* Automated unit, mocking, and integration tests
+* Centralized error handling with `ProblemDetails`
 
-\* ASP.NET Core Identity
+## Getting Started
 
-\* JWT Authentication
+### 1. Restore the packages
 
-\* FluentValidation
-
-\* xUnit
-
-\* Moq
-
-\* WebApplicationFactory
-
-\* Swagger / OpenAPI
-
-\* CORS
-
-\* Rate Limiting
-
-**## Main Features**
-
-\* Patient, Vital Sign, Medication, and Appointment management
-
-\* JWT authentication and role-based authorization
-
-\* Three roles: **\*\*Admin, Doctor, Patient\*\***
-
-\* DTOs for API requests and responses
-
-\* FluentValidation for input validation
-
-\* Login rate limiting
-
-\* Database migrations and seed data
-
-\* Swagger for API testing
-
-\* Automated unit, mocking, and integration tests
-
-\* Centralized error handling with ProblemDetails
-
-**## Getting Started**
-
-Restore the packages:
-
-\`\`\`bash
-
+```bash
 dotnet restore
+```
 
-\`\`\`
+### 2. Apply the database migrations
 
-Apply the database migrations:
-
-\`\`\`bash
-
+```bash
 dotnet ef database update
+```
 
-\`\`\`
+### 3. Run the project
 
-Run the project:
-
-\`\`\`bash
-
+```bash
 dotnet run
-
-\`\`\`
+```
 
 Swagger is available automatically in Development mode.
 
-**## Authentication & Roles**
+## Authentication & Roles
 
-The API uses **\*\*ASP.NET Core Identity + JWT\*\***.
+The API uses **ASP.NET Core Identity + JWT**.
 
 A default Admin account is seeded:
 
-\`\`\`text
-
-Email: admin\@cardiac.com
-
+```text
+Email: admin@cardiac.com
 Password: Admin123!
+```
 
-\`\`\`
+### Roles
 
-\* **\*\*Admin\*\***: Full access, including managing patients and deleting records.
+* **Admin** — Full access, including managing patients and deleting records.
+* **Doctor** — Can manage vital signs, medications, and appointments.
+* **Patient** — Can view their permitted healthcare data.
 
-\* **\*\*Doctor\*\***: Can manage vital signs, medications, and appointments.
+New users registered through the normal registration endpoint are automatically assigned the **Patient** role.
 
-\* **\*\*Patient\*\***: Can view their permitted healthcare data.
+Doctor accounts can only be created by an **Admin**.
 
-New users registered through the normal registration endpoint are assigned the Patient role automatically. Doctor accounts can only be created by an Admin.
+## Roles & Permissions by Module
 
-**## Roles & Permissions by Module**
+| Module       | GET All / GET by ID    | POST          | PUT           | DELETE |
+| ------------ | ---------------------- | ------------- | ------------- | ------ |
+| Patients     | Admin, Doctor          | Admin         | Admin         | Admin  |
+| Vital Signs  | Admin, Doctor, Patient | Admin, Doctor | Admin, Doctor | Admin  |
+| Medications  | Admin, Doctor, Patient | Admin, Doctor | Admin, Doctor | Admin  |
+| Appointments | Admin, Doctor, Patient | Admin, Doctor | Admin, Doctor | Admin  |
 
-\| Module       | GET all / GET by id    | POST          | PUT           | DELETE |
+## Validation & Security
 
-\| ------------ | ---------------------- | ------------- | ------------- | ------ |
+Create and Update requests are validated using **FluentValidation**.
 
-\| Patients     | Admin, Doctor          | Admin         | Admin         | Admin  |
+Invalid data, such as:
 
-\| VitalSigns   | Admin, Doctor, Patient | Admin, Doctor | Admin, Doctor | Admin  |
+* Invalid age
+* Invalid phone number
+* Invalid heart rate
+* Past appointment date
 
-\| Medications  | Admin, Doctor, Patient | Admin, Doctor | Admin, Doctor | Admin  |
+returns a structured `400 Bad Request` response.
 
-\| Appointments | Admin, Doctor, Patient | Admin, Doctor | Admin, Doctor | Admin  |
+The login endpoint is also protected with **rate limiting**.
 
-**## Validation & Security**
+After 5 login attempts within one minute, additional requests return:
 
-Create and Update requests are validated using **\*\*FluentValidation\*\***.
+```text
+429 Too Many Requests
+```
 
-Invalid data, such as an invalid age, phone number, heart rate, or past appointment date, returns a structured \`400 Bad Request\`.
+## API Testing
 
-The login endpoint is also protected with rate limiting. After 5 attempts per minute, additional requests return \`429 Too Many Requests\`.
-
-**## API Testing**
-
-The API was tested through Swagger using Admin, Doctor, and Patient accounts.
+The API was tested through Swagger using **Admin, Doctor, and Patient** accounts.
 
 The testing covered:
 
-\* Authentication and JWT tokens
-
-\* Role-based authorization
-
-\* CRUD operations
-
-\* Validation errors
-
-\* \`401\` and \`403\` authorization responses
-
-\* \`404\` for missing resources
-
-\* Login rate limiting with \`429\`
-
-\* Different permissions for Admin, Doctor, and Patient
+* Authentication and JWT tokens
+* Role-based authorization
+* CRUD operations
+* Validation errors
+* `401 Unauthorized`
+* `403 Forbidden`
+* `404 Not Found`
+* `429 Too Many Requests`
+* Different permissions for Admin, Doctor, and Patient
 
 The database is also seeded with sample patients, vital signs, medications, and appointments for testing.
 
-**### Testing Walkthrough**
+## Testing Walkthrough
 
-Registering a new account confirms it defaults to the Patient role.
+### 1. Patient Registration
 
-![register]\(image.png)
+Registering a new account confirms that it defaults to the **Patient** role.
+
+![Register](image.png)
+
+### 2. Admin Login
 
 Logging in as the seeded Admin account returns a JWT token.
 
-![login]\(image-1.png)
+![Login](image-1.png)
 
-That token is used to authorize all further requests through the Swagger Authorize button.
+### 3. Swagger Authorization
 
-![token]\(image-2.png)
+The JWT token is used to authorize further requests through the Swagger **Authorize** button.
 
-Testing role restrictions on Patients, an unauthenticated or wrong-role request to GET patients correctly returns \`403\`.
+![Token Authorization](image-2.png)
 
-![admin 403]\(image-3.png)
+### 4. Patient Access Restriction
 
-Once authorized as Admin, the same request succeeds with a \`200\` and returns the seeded patients.
+An unauthenticated or wrong-role request to `GET /api/patients` correctly returns `403 Forbidden`.
 
-![after login admin 200]\(image-4.png)
+![Admin 403](image-3.png)
 
-Creating a new patient as Admin succeeds with a \`201\`.
+### 5. Admin Access
 
-![post patient]\(image-5.png)
+Once authorized as Admin, the same request succeeds with `200 OK` and returns the seeded patients.
 
-Updating that same patient returns a \`204\`.
+![Admin 200](image-4.png)
 
-![update]\(image-8.png)
+### 6. Create Patient
 
-Deleting the patient also returns a \`204\`.
+Creating a new patient as Admin succeeds with `201 Created`.
 
-![delete patient]\(image-6.png)
+![Create Patient](image-5.png)
 
-Fetching the deleted patient afterward correctly returns a \`404\`, confirming the delete actually took effect.
+### 7. Update Patient
 
-![id 3 deleted and 4 updated]\(image-7.png)
+Updating the same patient returns `204 No Content`.
 
-Sending intentionally invalid data, such as an age outside the allowed range or an invalid gender value, triggers FluentValidation and returns a structured \`400\` with a clear message for each failing field.
+![Update Patient](image-8.png)
 
-![FluentValidation]\(image-9.png)
+### 8. Delete Patient
 
-Sending repeated login requests quickly triggers the rate limiter, returning a \`429\` after the fifth attempt within a minute.
+Deleting the patient returns `204 No Content`.
 
-![Rate Limiting]\(image-10.png)
+![Delete Patient](image-6.png)
 
-The same CRUD pattern was verified across the other modules. Creating a vital sign record succeeds as expected.
+### 9. Verify Deleted Patient
 
-![POST /api/vitalsigns]\(image-11.png)
+Fetching the deleted patient afterward correctly returns `404 Not Found`, confirming that the delete operation took effect.
 
-Fetching all vital sign records confirms the new record is present.
+![Deleted Patient 404](image-7.png)
 
-![GET /api/vitalsigns]\(image-12.png)
+### 10. FluentValidation
+
+Sending intentionally invalid data, such as an age outside the allowed range or an invalid gender value, triggers FluentValidation and returns a structured `400 Bad Request` response with a clear message for each failing field.
+
+![FluentValidation](image-9.png)
+
+### 11. Login Rate Limiting
+
+Sending repeated login requests quickly triggers the rate limiter and returns `429 Too Many Requests` after the fifth attempt within one minute.
+
+![Rate Limiting](image-10.png)
+
+## Vital Signs Testing
+
+The same CRUD pattern was verified across the other modules.
+
+### Create Vital Sign
+
+Creating a vital sign record succeeds as expected.
+
+![POST Vital Signs](image-11.png)
+
+### Get Vital Signs
+
+Fetching all vital sign records confirms that the new record is present.
+
+![GET Vital Signs](image-12.png)
+
+### Vital Sign Validation
 
 Sending a heart rate outside the valid range correctly triggers a validation error.
 
-![heartRate out of range validation]\(image-13.png)
+![Heart Rate Validation](image-13.png)
 
-Creating a medication record succeeds the same way.
+## Medication Testing
 
-![POST /api/medications]\(image-14.png)
+Creating a medication record succeeds as expected.
 
-Creating an appointment with a future date also succeeds.
+![POST Medications](image-14.png)
 
-![POST /api/appointments]\(image-15.png)
+## Appointment Testing
 
-To verify the Doctor role specifically, an Admin account was used to create a Doctor account through the create-doctor endpoint.
+Creating an appointment with a future date succeeds as expected.
 
-![POST /api/auth/create-doctor]\(image-16.png)
+![POST Appointments](image-15.png)
 
-That Doctor account was then used to log in and obtain its own token.
+## Doctor & Patient Role Testing
 
-![doctor login]\(image-17.png)
+### Create Doctor Account
+
+An Admin account was used to create a Doctor account through the create-doctor endpoint.
+
+![Create Doctor](image-16.png)
+
+### Doctor Login
+
+The Doctor account was then used to log in and obtain its own JWT token.
+
+![Doctor Login](image-17.png)
+
+### Patient Registration
 
 A second account was registered normally to represent a Patient.
 
-![patient register]\(image-18.png)
+![Patient Register](image-18.png)
 
-Logging in as that Patient and attempting a restricted action correctly returns \`403\`.
+### Patient Authorization
 
-![patient 403]\(image-19.png)
+Logging in as that Patient and attempting a restricted action correctly returns `403 Forbidden`.
 
-Finally, logging in as the Doctor and attempting to create a patient, an action reserved for Admin only, also correctly returns \`403\`, confirming the role boundaries between Admin and Doctor are enforced as intended.
+![Patient 403](image-19.png)
 
-![doctor 403 in post patient]\(image-20.png)
+### Doctor Authorization
 
-**## Automated Testing**
+Logging in as the Doctor and attempting to create a patient, an action reserved for Admin only, also correctly returns `403 Forbidden`.
 
-The project includes automated tests using **\*\*xUnit, Moq, and WebApplicationFactory\*\***.
+This confirms that the role boundaries between **Admin, Doctor, and Patient** are enforced as intended.
 
-**### Unit Tests — xUnit**
+![Doctor 403](image-20.png)
+
+## Automated Testing
+
+The project includes automated tests using:
+
+* **xUnit**
+* **Moq**
+* **WebApplicationFactory**
+
+### Unit Tests — xUnit
 
 Unit tests cover the VitalSign validation rules and verify both valid and invalid input scenarios.
 
 The tests include cases such as valid heart rate values and invalid values outside the allowed range.
 
+![xUnit Unit Tests](image-21.png)
 
-
-![xUnit Unit Tests]\(image-21.png)
-
-**### Mocking — Moq**
+### Mocking — Moq
 
 Moq is used to isolate the VitalSign service logic from external dependencies and test the service behavior independently.
 
+![Moq Service Tests](image-22.png)
 
+### Integration Tests — WebApplicationFactory
 
-![Moq Service Tests]\(image-22.png)
-
-**### Integration Tests — WebApplicationFactory**
-
-Integration tests use \`WebApplicationFactory\` with an in-memory database to test the API through HTTP requests.
+Integration tests use `WebApplicationFactory` with an in-memory database to test the API through HTTP requests.
 
 The tests cover authentication and authorization scenarios, including:
 
-\* Unauthenticated requests returning \`401 Unauthorized\`
+* Unauthenticated requests returning `401 Unauthorized`
+* Successful Admin authentication
+* Authorized Admin access returning `200 OK`
+* Patient users being denied restricted operations with `403 Forbidden`
 
-\* Successful Admin authentication
+![Integration Tests](image-23.png)
 
-\* Authorized Admin access returning \`200 OK\`
-
-\* Patient users being denied restricted operations with \`403 Forbidden\`
-
-![Integration Tests]\(image-23.png)
-
-**### Test Results**
+### Test Results
 
 The complete automated test suite was executed using:
 
-\`\`\`bash
-
+```bash
 dotnet test
-
-\`\`\`
+```
 
 All tests passed successfully.
 
-![Test Results - 15 Passed]\(image-24.png)
+![Test Results - 15 Passed](image-24.png)
 
-**## Error Handling**
+## Error Handling
 
-Unhandled exceptions are handled centrally using ASP.NET Core's \`UseExceptionHandler\`.
+Unhandled exceptions are handled centrally using ASP.NET Core's `UseExceptionHandler`.
 
 When an unexpected exception occurs:
 
-\* The exception is caught by the centralized exception handler.
+* The exception is caught by the centralized exception handler.
+* Full exception details are logged server-side using `ILogger`.
+* The client receives a standardized `ProblemDetails` response.
+* Internal exception messages and stack traces are not exposed to the client.
 
-\* Full exception details are logged server-side using \`ILogger\`.
-
-\* The client receives a standardized \`ProblemDetails\` response.
-
-\* Internal exception messages and stack traces are not exposed to the client.
-
-![Centralized Error Handling]\(image-25.png)
+![Centralized Error Handling](image-25.png)
 
 This provides consistent and safe error responses across the API while keeping internal implementation details protected.
 
-**## Project Structure**
+## Project Structure
 
-\`\`\`text
-
+```text
 CardiacPatientMonitoring/
-
+│
 ├── Controllers/
-
 ├── Models/
-
 ├── DTOs/
-
 ├── Validators/
-
 ├── Data/
-
 ├── Migrations/
-
 ├── Program.cs
-
 ├── appsettings.json
-
 └── README.md
+```
 
-\`\`\`
+## Summary
 
-**## Summary**
+This project demonstrates building a secure and structured healthcare REST API using **ASP.NET Core**, with:
 
-This project demonstrates building a secure and structured healthcare REST API using ASP.NET Core, with database management through EF Core, authentication using JWT, role-based authorization, validation, automated testing with xUnit and Moq, integration testing with WebApplicationFactory, centralized error handling with ProblemDetails, and API testing through Swagger.
+* Database management through EF Core
+* Authentication using JWT
+* Role-based authorization
+* Input validation with FluentValidation
+* Automated testing with xUnit and Moq
+* Integration testing with WebApplicationFactory
+* Centralized error handling with ProblemDetails
+* API testing through Swagger
+* Rate limiting for login protection
+
+The project combines these components to provide a structured, secure, and testable backend API for cardiac patient monitoring.
