@@ -12,6 +12,9 @@ The project is built using **ASP.NET Core, Entity Framework Core, and SQL Server
 * ASP.NET Core Identity
 * JWT Authentication
 * FluentValidation
+* xUnit
+* Moq
+* WebApplicationFactory
 * Swagger / OpenAPI
 * CORS
 * Rate Limiting
@@ -26,6 +29,8 @@ The project is built using **ASP.NET Core, Entity Framework Core, and SQL Server
 * Login rate limiting
 * Database migrations and seed data
 * Swagger for API testing
+* Automated unit, mocking, and integration tests
+* Centralized error handling with ProblemDetails
 
 ## Getting Started
 
@@ -88,62 +93,75 @@ The returned JWT token is added through Swagger's **Authorize** button and is th
 
 ## Roles & Permissions by Module
 
-| Module       | GET all / GET by id    | POST          | PUT           | DELETE |
-| ------------ | ---------------------- | ------------- | ------------- | ------ |
-| Patients     | Admin, Doctor          | Admin         | Admin         | Admin  |
-| VitalSigns   | Admin, Doctor, Patient | Admin, Doctor | Admin, Doctor | Admin  |
-| Medications  | Admin, Doctor, Patient | Admin, Doctor | Admin, Doctor | Admin  |
-| Appointments | Admin, Doctor, Patient | Admin, Doctor | Admin, Doctor | Admin  |
-
-### Authorization Testing
-
-Accessing the Patients endpoint without the required authorization is rejected.
-
-![Authorization 403](image-3.png)
-
-After authorizing as Admin, the same request succeeds and returns the seeded patients.
-
-![Admin GET Patients](image-4.png)
-
-## Patient CRUD
-
-### Create Patient
-
-An Admin can create a new patient successfully.
-
-![Create Patient](image-5.png)
-
-### Update Patient
-
-The created patient can be updated by an Admin.
-
-![Update Patient](image-8.png)
-
-### Delete Patient
-
-An Admin can delete the patient.
-
-![Delete Patient](image-6.png)
-
-### Verify Delete
-
-Fetching the deleted patient returns `404 Not Found`, confirming that the delete operation was successful.
-
-![Deleted Patient 404](image-7.png)
+| Module | GET all / GET by id | POST | PUT | DELETE |
+|---|---|---|---|---|
+| Patients | Admin, Doctor | Admin | Admin | Admin |
+| VitalSigns | Admin, Doctor, Patient | Admin, Doctor | Admin, Doctor | Admin |
+| Medications | Admin, Doctor, Patient | Admin, Doctor | Admin, Doctor | Admin |
+| Appointments | Admin, Doctor, Patient | Admin, Doctor | Admin, Doctor | Admin |
 
 ## Validation & Security
 
-Create and Update requests are validated using **FluentValidation**.
+Create and Update requests are validated using FluentValidation.
+Invalid data, such as an invalid age, phone number, heart rate, or past appointment date, returns a structured `400 Bad Request`.
 
-Examples include:
+The login endpoint is also protected with rate limiting. After 5 attempts per minute, additional requests return `429 Too Many Requests`.
 
-* Invalid age
-* Invalid phone number
-* Invalid heart rate
-* Invalid gender
-* Past appointment date
+## Testing
 
-Invalid input returns a structured `400 Bad Request` response with the validation errors.
+The API was tested through Swagger using Admin, Doctor, and Patient accounts.
+The testing covered:
+
+* Authentication and JWT tokens
+* Role-based authorization
+* CRUD operations
+* Validation errors
+* `401` and `403` authorization responses
+* `404` for missing resources
+* Login rate limiting with `429`
+* Different permissions for Admin, Doctor, and Patient
+
+The database is also seeded with sample patients, vital signs, medications, and appointments for testing.
+
+### Testing Walkthrough
+
+Registering a new account confirms it defaults to the Patient role.
+
+![register](image.png)
+
+Logging in as the seeded Admin account returns a JWT token.
+
+![login](image-1.png)
+
+That token is used to authorize all further requests through the Swagger Authorize button.
+
+![token](image-2.png)
+
+Testing role restrictions on Patients, an unauthenticated or wrong-role request to GET patients correctly returns `403`.
+
+![admin 403](image-3.png)
+
+Once authorized as Admin, the same request succeeds with a `200` and returns the seeded patients.
+
+![after login admin 200](image-4.png)
+
+Creating a new patient as Admin succeeds with a `201`.
+
+![post patient](image-5.png)
+
+Updating that same patient returns a `204`.
+
+![update](image-8.png)
+
+Deleting the patient also returns a `204`.
+
+![delete patient](image-6.png)
+
+Fetching the deleted patient afterward correctly returns a `404`, confirming the delete actually took effect.
+
+![id 3 deleted and 4 updated](image-7.png)
+
+Sending intentionally invalid data, such as an age outside the allowed range or an invalid gender value, triggers FluentValidation and returns a structured `400` with a clear message for each failing field.
 
 ![FluentValidation](image-9.png)
 
@@ -217,12 +235,13 @@ The Doctor attempts to create a Patient, but this operation is restricted to Adm
 
 The API correctly returns `403 Forbidden`, confirming that the role boundaries are enforced.
 
-![Doctor 403](image-20.png)
+![doctor 403 in post patient](image-20.png)
 
 ## Project Structure
 
 ```text
 CardiacPatientMonitoring/
+
 ├── Controllers/
 ├── Models/
 ├── DTOs/
@@ -236,13 +255,4 @@ CardiacPatientMonitoring/
 
 ## Summary
 
-This project demonstrates a structured ASP.NET Core backend with:
-
-* Async CRUD operations
-* EF Core and SQL Server
-* Identity and JWT authentication
-* Role-based authorization
-* FluentValidation
-* Rate limiting
-* Swagger API testing
-* Database migrations and seed data
+This project demonstrates building a secure and structured healthcare REST API using ASP.NET Core, with database management through EF Core, authentication using JWT, role-based authorization, validation, and API testing through Swagger.

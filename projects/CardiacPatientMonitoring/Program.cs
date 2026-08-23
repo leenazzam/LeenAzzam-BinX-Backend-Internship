@@ -252,6 +252,25 @@ else
 {
     app.UseHsts();
 }
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/problem+json";
+
+        var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+        var feature = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
+
+        logger.LogError(feature?.Error, "Unhandled exception occurred for request {Path}", context.Request.Path);
+
+        await context.Response.WriteAsJsonAsync(new Microsoft.AspNetCore.Mvc.ProblemDetails
+        {
+            Title = "An unexpected error occurred.",
+            Status = 500
+        });
+    });
+});
 
 app.UseHttpsRedirection();
 
@@ -264,3 +283,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.Run();
+public partial class Program { }
