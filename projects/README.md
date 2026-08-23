@@ -3,7 +3,6 @@
 A REST API for managing cardiac patients, vital signs, medications, and appointments.
 
 The project is built using **ASP.NET Core, Entity Framework Core, and SQL Server LocalDB**.
-
 ## Technologies
 
 * ASP.NET Core Web API
@@ -29,7 +28,7 @@ The project is built using **ASP.NET Core, Entity Framework Core, and SQL Server
 * Login rate limiting
 * Database migrations and seed data
 * Swagger for API testing
-* Automated unit, mocking, and integration tests
+* Automated unit, mocking, and integration tests [🧪 Go to Automated Testing](#automated-testing)
 * Centralized error handling with `ProblemDetails`
 
 ## Getting Started
