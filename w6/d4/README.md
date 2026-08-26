@@ -45,3 +45,5 @@ Sending the same title and projectId as an existing task returns `400 Bad Reques
 ![Title](image-1.png)
 
 All requests were tested through Swagger and returned the expected status codes.
+
+<img width="1109" height="749" alt="image" src="https://github.com/user-attachments/assets/8edf3cf9-c113-4498-9e81-b72d0a9777b1" />
