@@ -1,4 +1,4 @@
-﻿## Day 3 — Catalog & Read Operations
+## Day 3 — Catalog & Read Operations
 
 Enhanced the `GET /api/tasks` endpoint by adding pagination, filtering, sorting, and DTO projection.
 
@@ -79,3 +79,5 @@ GET /api/Projects?page=1&pageSize=10&name=Sample&sort=name_desc
 ![sample & name_desc](image-8.png)
 
 All requests were tested through Swagger and returned `200 OK` with the expected data.
+
+<img width="1689" height="767" alt="image" src="https://github.com/user-attachments/assets/0f8299d6-187f-41c3-88d2-f4003285e2c1" />

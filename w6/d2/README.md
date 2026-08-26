@@ -67,3 +67,6 @@ The database was verified after applying the migrations.
 * Project Owner correctly linked to `AspNetUsers`
 * Existing Tasks preserved
 ![alt text](image-3.png)
+
+
+<img width="1686" height="634" alt="image" src="https://github.com/user-attachments/assets/992a8147-0b87-4728-93c0-41ddda9f0633" />
