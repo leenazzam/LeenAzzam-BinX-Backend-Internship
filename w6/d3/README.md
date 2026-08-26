@@ -1,4 +1,4 @@
-﻿## Day 3 — Catalog & Read Operations
+## Day 3 — Catalog & Read Operations
 
 Enhanced the `GET /api/tasks` endpoint by adding pagination, filtering, sorting, and DTO projection.
 
@@ -43,6 +43,40 @@ GET /api/tasks?page=2&pageSize=2
 ```
 
 ![page=2\&pageSize=2](image-4.png)
+
+All requests were tested through Swagger and returned `200 OK` with the expected data.
+### GET /api/Projects
+
+Enhanced the `GET /api/Projects` endpoint by adding pagination, filtering, sorting, and DTO projection, matching the same pattern used for `GET /api/tasks`.
+
+#### Features
+
+* Pagination using `page` and `pageSize`
+* Filtering by `name`
+* Sorting by `name` or `createdDate`
+* DTO projection using `ProjectResponseDto`
+* Paginated response using `PagedResult<T>`
+
+Swagger view of the updated endpoint with the new query parameters:
+
+![projects](image-5.png)
+![projects swagger](image-6.png)
+
+#### Default Request
+
+```http
+GET /api/Projects?page=1&pageSize=10
+```
+
+![res](image-7.png)
+
+#### Filtering & Sorting
+
+```http
+GET /api/Projects?page=1&pageSize=10&name=Sample&sort=name_desc
+```
+
+![sample & name_desc](image-8.png)
 
 All requests were tested through Swagger and returned `200 OK` with the expected data.
 
