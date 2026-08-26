@@ -46,3 +46,4 @@ GET /api/tasks?page=2&pageSize=2
 
 All requests were tested through Swagger and returned `200 OK` with the expected data.
 
+<img width="1689" height="767" alt="image" src="https://github.com/user-attachments/assets/0f8299d6-187f-41c3-88d2-f4003285e2c1" />
