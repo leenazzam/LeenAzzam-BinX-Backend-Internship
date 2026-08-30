@@ -103,8 +103,6 @@ The migration adds `IdentityUserId` to `Patients` and creates a foreign key to `
 
 ---
 
-## Sprint 2 Backlog
-
 The Sprint 2 backlog was planned as follows:
 
 | Task | Day |
