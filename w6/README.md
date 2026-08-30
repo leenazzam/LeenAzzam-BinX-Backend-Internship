@@ -2,64 +2,60 @@
 
 ## Task & Project Management API
 
-Week 6 marks the beginning of **Phase 3** and **Sprint 1** of the Task & Project Management API project.
+Week 6 is the first sprint of Phase 3 for the Task & Project Management API.
 
-The sprint focused on establishing the project foundation through database design, EF Core implementation, core API routes, business logic, and Sprint review.
+The week follows a complete Sprint cycle, starting with planning and database design, followed by implementation, API development, business logic, and finally Sprint Review and Retrospective.
 
----
+## Discussion Flow
 
-## Week 6 Discussion Flow
+### 1. Day 1 — Sprint Planning & Database Design
 
-Follow the days in order during the discussion:
+Sprint planning, domain design, database schema, ERD, and Sprint backlog.
 
-### Day 1 — Sprint Planning & Database Design
-
-**Focus:** Sprint planning, domain design, database schema, ERD, and backlog.
-
-➡️ [Go to Day 1 — Sprint Planning & Database Design](./Day%201/README.md)
+➡️ [Open Day 1](./d1/README.md)
 
 ---
 
-### Day 2 — EF Core Data Model & Migrations
+### 2. Day 2 — EF Core Data Model & Migrations
 
-**Focus:** EF Core entities, Fluent API, Identity relationships, seed data, and migrations.
+EF Core entities, Fluent API relationships, Identity integration, seed data, and database migrations.
 
-➡️ [Go to Day 2 — EF Core Data Model & Migrations](./Day%202/README.md)
-
----
-
-### Day 3 — Catalog & Read Operations
-
-**Focus:** Pagination, filtering, sorting, DTO projection, and `GET` endpoints for Projects and Tasks.
-
-➡️ [Go to Day 3 — Catalog & Read Operations](./Day%203/README.md)
+➡️ [Open Day 2](./d2/README.md)
 
 ---
 
-### Day 4 — Write Operations & Business Logic
+### 3. Day 3 — Catalog & Read Operations
 
-**Focus:** Task creation, validation, business rules, database transactions, and API error handling.
+Pagination, filtering, sorting, DTO projection, and the enhanced Projects and Tasks GET endpoints.
 
-➡️ [Go to Day 4 — Write Operations & Business Logic](./Day%204/README.md)
-
----
-
-### Day 5 — Sprint Review & Retrospective
-
-**Focus:** Postman demo, backlog review, Sprint 1 retrospective, and improvements for Sprint 2.
-
-➡️ [Go to Day 5 — Sprint Review & Retrospective](./Day%205/README.md)
+➡️ [Open Day 3](./d3/README.md)
 
 ---
 
-## Sprint 1 Flow
+### 4. Day 4 — Write Operations & Business Logic
+
+Task creation, validation, duplicate prevention, default status, and database transactions.
+
+➡️ [Open Day 4](./d4/README.md)
+
+---
+
+### 5. Day 5 — Sprint Review & Retrospective
+
+Postman demo, Sprint backlog review, completed features, identified gaps, and Sprint 2 action items.
+
+➡️ [Open Day 5](./d5/README.md)
+
+---
+
+## Sprint Flow
 
 ```text
 Day 1
-Sprint Planning & Database Design
+Planning & Database Design
         ↓
 Day 2
-EF Core Model & Migrations
+EF Core & Migrations
         ↓
 Day 3
 Read Operations
@@ -71,32 +67,17 @@ Day 5
 Sprint Review & Retrospective
 ```
 
----
-
 ## Week 6 Outcome
 
 By the end of Sprint 1, the project had:
 
-* A documented database design and ERD
+* Complete database design and ERD
 * EF Core entities and Fluent API configuration
-* Applied database migrations
-* Identity relationships
+* Identity relationships and migrations
 * Seed data
-* Paginated, filtered, and sorted Projects and Tasks endpoints
-* DTO-based API responses
+* Paginated, filtered, and sorted GET endpoints
+* DTO-based responses
 * Task creation with business logic
-* Transaction handling
-* Postman API verification
-* A completed Sprint Review and Retrospective
-
----
-
-## Quick Navigation
-
-| Day   | Topic                             | Link                        |
-| ----- | --------------------------------- | --------------------------- |
-| Day 1 | Sprint Planning & Database Design | [Open](./Day%201/README.md) |
-| Day 2 | EF Core Data Model & Migrations   | [Open](./Day%202/README.md) |
-| Day 3 | Catalog & Read Operations         | [Open](./Day%203/README.md) |
-| Day 4 | Write Operations & Business Logic | [Open](./Day%204/README.md) |
-| Day 5 | Sprint Review & Retrospective     | [Open](./Day%205/README.md) |
+* Database transaction handling
+* Postman Sprint Review
+* Sprint Retrospective and Sprint 2 action items
