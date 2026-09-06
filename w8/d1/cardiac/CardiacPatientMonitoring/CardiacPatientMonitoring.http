@@ -1,0 +1,6 @@
+@CardiacPatientMonitoring_HostAddress = http://localhost:5209
+
+GET {{CardiacPatientMonitoring_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
