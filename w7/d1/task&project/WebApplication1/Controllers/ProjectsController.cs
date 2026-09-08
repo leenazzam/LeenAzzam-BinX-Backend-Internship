@@ -80,18 +80,17 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        [HttpPost]
-public async Task<ActionResult<Project>> CreateProject(Project project)
-{
-    _context.Projects.Add(project);
-    await _context.SaveChangesAsync();
+        public async Task<ActionResult<Project>> CreateProject(Project project)
+        {
+            _context.Projects.Add(project);
+            await _context.SaveChangesAsync();
 
-    return CreatedAtAction(
-        nameof(GetProject),
-        new { id = project.Id },
-        project
-    );
-}
+            return CreatedAtAction(
+                nameof(GetProject),
+                new { id = project.Id },
+                project
+            );
+        }
         [HttpGet("admin")]
         [Authorize(Policy = "AdminWithEmail")]
         public IActionResult AdminOnly()
