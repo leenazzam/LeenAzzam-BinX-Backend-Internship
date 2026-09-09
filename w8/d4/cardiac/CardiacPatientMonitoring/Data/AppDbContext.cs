@@ -52,10 +52,6 @@ public class AppDbContext : IdentityDbContext
             .OnDelete(DeleteBehavior.Cascade);
 
         // Patient -> Alerts (one-to-many)
-        // NOTE: not Cascade here. Alert already reaches Patient through VitalSign
-        // (Patient -> VitalSign -> Alert, both Cascade), and SQL Server refuses to
-        // create two independent cascade paths to the same table. Deleting a patient
-        // still deletes their alerts — it just happens via the VitalSign cascade.
         builder.Entity<Alert>()
             .HasOne(al => al.Patient)
             .WithMany()
@@ -76,5 +72,14 @@ public class AppDbContext : IdentityDbContext
         builder.Entity<Alert>()
             .Property(al => al.Message)
             .HasMaxLength(300);
+
+        builder.Entity<VitalSign>()
+    .HasIndex(v => new { v.PatientId, v.RecordedAt });
+
+        builder.Entity<Alert>()
+            .HasIndex(a => new { a.PatientId, a.CreatedAt });
+
+        builder.Entity<Alert>()
+            .HasIndex(a => new { a.PatientId, a.IsResolved });
     }
 }

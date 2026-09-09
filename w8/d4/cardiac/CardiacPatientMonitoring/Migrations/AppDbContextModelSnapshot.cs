@@ -54,9 +54,11 @@ namespace CardiacPatientMonitoring.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientId");
-
                     b.HasIndex("VitalSignId");
+
+                    b.HasIndex("PatientId", "CreatedAt");
+
+                    b.HasIndex("PatientId", "IsResolved");
 
                     b.ToTable("Alerts");
                 });
@@ -180,7 +182,7 @@ namespace CardiacPatientMonitoring.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PatientId");
+                    b.HasIndex("PatientId", "RecordedAt");
 
                     b.ToTable("VitalSigns");
                 });

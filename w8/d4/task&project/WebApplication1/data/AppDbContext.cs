@@ -48,6 +48,8 @@ namespace WebApplication1.Data
                 .HasForeignKey(ta => ta.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+
+
             // Seed initial project data
             builder.Entity<Project>().HasData(
                 new Project
@@ -71,6 +73,15 @@ namespace WebApplication1.Data
                     ProjectId = 2
                 }
             );
+
+            builder.Entity<Project>()
+    .HasIndex(p => p.OwnerId);
+
+            builder.Entity<AppTask>()
+                .HasIndex(t => new { t.ProjectId, t.Status });
+
+            builder.Entity<AppTask>()
+                .HasIndex(t => new { t.ProjectId, t.Title });
         }
 
     }
