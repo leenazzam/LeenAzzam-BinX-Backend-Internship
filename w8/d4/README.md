@@ -1,4 +1,4 @@
-# Week 8 — Day 4: Database Indexing & Performance Profiling
+# Week 8 Day 4: Database Indexing & Performance Profiling
 
 Day 4 focused on database indexing and performance profiling for both capstone projects. After reviewing the main queries, I added the necessary indexes through Fluent API and created a new migration.
 
