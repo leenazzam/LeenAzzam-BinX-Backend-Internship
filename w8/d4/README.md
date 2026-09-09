@@ -1,69 +1,29 @@
-# Week 8 — Day 3: Redis Caching
+# Week 8 — Day 4: Database Indexing & Performance Profiling
 
-Day 3 focused on adding **Redis Caching** to both capstone APIs using `IDistributedCache`.
+Day 4 focused on database indexing and performance profiling for both capstone projects. After reviewing the main queries, I added the necessary indexes through Fluent API and created a new migration.
 
-## Goals
+### Task & Project Management API
 
-* Configure Redis with Docker.
-* Implement the **Cache-Aside Pattern**.
-* Reduce unnecessary database queries.
-* Add cache expiration and invalidation.
+For the Task API, I added an index on `Project.OwnerId`, and composite indexes on `Tasks(ProjectId, Status)` and `Tasks(ProjectId, Title)`. These indexes support the filtering and duplicate-title checks used in the main endpoints.
 
-## Task & Project Management API
+![Task API indexes](image.png)
 
-Cached endpoint:
+### Cardiac Patient Monitoring API
 
-```text
-GET /api/Projects/summary
-```
+For the Cardiac API, I added composite indexes on `VitalSigns(PatientId, RecordedAt)`, `Alerts(PatientId, CreatedAt)`, and `Alerts(PatientId, IsResolved)`. These indexes support the filtering and sorting used in the main queries.
 
-The first request gets data from the database and stores it in Redis.
-Subsequent requests are served from the cache.
+![Cardiac API indexes](image-1.png)
 
-![Projects](image.png)
+### Performance Profiling
 
-Project updates invalidate the summary cache.
+I installed the SQL Server extension in VS Code and connected to the local LocalDB instance. I used `STATISTICS IO` and `STATISTICS TIME` to measure logical reads and execution time.
 
-![Update](image-1.png)
+![SQL Server connection](image-2.png)
 
-![Cache Invalidation](image-2.png)
+For the Task API, querying tasks filtered by `ProjectId` and `Status` returned **4 logical reads** with a total execution time of **3ms**.
 
-## Cardiac Patient Monitoring API
+![Task API performance](image-3.png)
 
-Cached endpoint:
+For the Cardiac API, querying vital signs filtered by `PatientId` and sorted by `RecordedAt` returned **4 logical reads** with a total execution time of **10ms**.
 
-```text
-GET /api/Patients/summary
-```
-
-The patient summary is cached for **10 minutes**.
-
-![Cardiac Redis](image-3.png)
-
-Patient create, update, and delete operations invalidate the cache.
-
-![Update and Cache Invalidation](image-4.png)
-
-## Redis Configuration
-
-```json
-"Redis": "localhost:6379"
-```
-
-Redis was registered using:
-
-```csharp
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration =
-        builder.Configuration.GetConnectionString("Redis");
-});
-```
-
-## Result
-
-Redis caching was successfully implemented and tested in both APIs.
-
-* **Cache Hit** → Data returned from Redis.
-* **Cache Miss** → Data loaded from the database and cached.
-* **Cache Invalidation** → Cache removed after data changes.
+These results show that the composite indexes were used efficiently for the tested queries.
