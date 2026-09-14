@@ -1,69 +1,61 @@
-# Sprint 4: Test Coverage
+# Day 2 — API Documentation & Testing
 
-## Sprint Goal
+Today, Swagger API documentation was reviewed and tested for both projects. The main endpoints were executed successfully using realistic requests and responses.
 
-Improve API test coverage by finding missing tests and covering the highest-risk endpoints.
+## Cardiac Patient Monitoring API
 
-## Sprint Backlog
+### Login
 
-* Audit all API endpoints.
-* Identify happy-path and error-path gaps.
-* Prioritize authentication, authorization, and critical patient operations.
-* Add tests for the highest-priority gaps.
-* Run the full test suite.
+Tested the login endpoint using Swagger.
 
-## Endpoint Coverage
+![Login](image-2.png)
 
-| Area                   | Coverage   |
-| ---------------------- | ---------- |
-| Authentication         | Both       |
-| Authorization          | Both       |
-| Tasks                  | Both       |
-| Vital Signs            | Both       |
-| Patients               | Happy Path |
-| Validation             | Both       |
-| Performance Regression | Covered    |
+### Example POST Request
 
-## High-Priority Tests
+An example POST request was tested through Swagger.
 
-### Authentication & Authorization
+![Example POST](image.png)
 
-Tests cover unauthorized access, valid login, admin access, and forbidden access for normal users.
+### Add Vital Sign
 
-### Task API
+A new vital sign was added for an existing patient.
 
-![Task API Tests](image.png)
+![Add Vital Sign](image-1.png)
 
-### Cardiac API
+### Add Appointment
 
-![Cardiac API Tests](image-1.png)
+A new appointment was added successfully.
 
-### Get Vital Sign by ID
+![Add Appointment](image-3.png)
 
-![Get Vital Sign](image-2.png)
+---
 
-### Get Patient by ID
+## Task Management API
 
-![Get Patient](image-3.png)
+### Login
 
-### Add Vital Sign — Existing Patient
+Tested the authentication endpoint using Swagger.
 
-![Existing Patient](image-4.png)
+![Login](image-4.png)
 
-### Add Vital Sign — Non-existing Patient
+### POST Task Example
 
-![Non-existing Patient](image-5.png)
+The Swagger request body and example for creating a task were reviewed.
 
-## Sprint 3 Retrospective Action
+![POST Task Example](image-5.png)
 
-Performance regression tests were kept to ensure optimized endpoints continue to execute efficiently.
+### Add Task
 
-## Final Verification
+A new task was created successfully using the API.
 
-The full test suite was run using:
+![Add Task](image-6.png)
 
-```bash
-dotnet test
-```
+---
 
-All tests passed successfully with **0 failed tests**.
+## Summary
+
+* Tested authentication with Swagger.
+* Tested POST endpoints for both projects.
+* Added Vital Signs and Appointments in the Cardiac API.
+* Added Tasks in the Task Management API.
+* Verified request and response examples.
