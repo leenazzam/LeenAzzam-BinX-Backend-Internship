@@ -71,8 +71,11 @@ public class AuthAndAccessApiTests : IClassFixture<CustomWebApplicationFactory>
             Password = "Patient123!"
         };
 
-        await _client.PostAsJsonAsync("/api/auth/register", registerRequest);
+var registerResponse = await _client.PostAsJsonAsync("/api/auth/register", registerRequest);
+var registerBody = await registerResponse.Content.ReadAsStringAsync();
 
+Console.WriteLine($"Register Status: {registerResponse.StatusCode}");
+Console.WriteLine($"Register Body: {registerBody}");
         var loginRequest = new LoginRequest
         {
             Email = "testpatient@cardiac.com",
@@ -81,6 +84,8 @@ public class AuthAndAccessApiTests : IClassFixture<CustomWebApplicationFactory>
 
         var loginResponse = await _client.PostAsJsonAsync("/api/auth/login", loginRequest);
         var loginBody = await loginResponse.Content.ReadAsStringAsync();
+        Console.WriteLine($"Login Status: {loginResponse.StatusCode}");
+Console.WriteLine($"Login Body: {loginBody}");
         var doc = JsonDocument.Parse(loginBody);
         var token = doc.RootElement.GetProperty("token").GetString();
 
