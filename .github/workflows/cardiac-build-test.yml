@@ -4,16 +4,17 @@ on:
   push:
     branches: [ "**" ]
     paths:
-      - "cardiac/**"
+      - "w9/d3/cardiac/**"
       - ".github/workflows/cardiac-build-test.yml"
   pull_request:
     branches: [ "**" ]
     paths:
-      - "cardiac/**"
+      - "w9/d3/cardiac/**"
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -23,10 +24,10 @@ jobs:
           dotnet-version: '9.0.x'
 
       - name: Restore
-        run: dotnet restore "cardiac/CardiacPatientMonitoring.Tests/CardiacPatientMonitoring.Tests.csproj"
+        run: dotnet restore "w9/d3/cardiac/CardiacPatientMonitoring.Tests/CardiacPatientMonitoring.Tests.csproj"
 
       - name: Build
-        run: dotnet build "cardiac/CardiacPatientMonitoring.Tests/CardiacPatientMonitoring.Tests.csproj" --no-restore --configuration Release
+        run: dotnet build "w9/d3/cardiac/CardiacPatientMonitoring.Tests/CardiacPatientMonitoring.Tests.csproj" --no-restore --configuration Release
 
       - name: Test
-        run: dotnet test "cardiac/CardiacPatientMonitoring.Tests/CardiacPatientMonitoring.Tests.csproj" --no-build --configuration Release --verbosity normal
+        run: dotnet test "w9/d3/cardiac/CardiacPatientMonitoring.Tests/CardiacPatientMonitoring.Tests.csproj" --no-build --configuration Release --verbosity normal
