@@ -1,61 +1,37 @@
-# Day 2 — API Documentation & Testing
+# Day 3 — CI/CD Pipeline with GitHub Actions
 
-Today, Swagger API documentation was reviewed and tested for both projects. The main endpoints were executed successfully using realistic requests and responses.
+## Overview
 
-## Cardiac Patient Monitoring API
+Implemented CI/CD pipelines using GitHub Actions for both APIs.
 
-### Login
+The pipelines automatically:
 
-Tested the login endpoint using Swagger.
+* Checkout the code
+* Setup .NET 9
+* Restore dependencies
+* Build the project
+* Run automated tests
+* Start Redis for tests that require caching
 
-![Login](image-2.png)
+## Cardiac API — CI Failure Test
 
-### Example POST Request
+A test was intentionally changed to make the pipeline fail.
+This confirmed that the CI pipeline correctly detects test failures.
 
-An example POST request was tested through Swagger.
+![Failed Cardiac CI/CD](image.png)
 
-![Example POST](image.png)
+## Cardiac API — Successful CI
 
-### Add Vital Sign
+After fixing the failing test, the Cardiac API pipeline passed successfully.
 
-A new vital sign was added for an existing patient.
+![Successful Cardiac CI](image-1.png)
 
-![Add Vital Sign](image-1.png)
+## Task API — Successful CI
 
-### Add Appointment
+The Task API pipeline also completed successfully with all required build and test steps.
 
-A new appointment was added successfully.
+![Successful Task CI/CD](<Screenshot 2026-09-15 163127.png>)
 
-![Add Appointment](image-3.png)
+## Result
 
----
-
-## Task Management API
-
-### Login
-
-Tested the authentication endpoint using Swagger.
-
-![Login](image-4.png)
-
-### POST Task Example
-
-The Swagger request body and example for creating a task were reviewed.
-
-![POST Task Example](image-5.png)
-
-### Add Task
-
-A new task was created successfully using the API.
-
-![Add Task](image-6.png)
-
----
-
-## Summary
-
-* Tested authentication with Swagger.
-* Tested POST endpoints for both projects.
-* Added Vital Signs and Appointments in the Cardiac API.
-* Added Tasks in the Task Management API.
-* Verified request and response examples.
+Both APIs now have working GitHub Actions CI pipelines that automatically build and test the projects on push and pull requests.
