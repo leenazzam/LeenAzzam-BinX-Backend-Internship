@@ -1,0 +1,39 @@
+name: build-and-test-task-api
+
+on:
+  push:
+    branches: [ "**" ]
+    paths:
+      - "w9/d3/task&project/**"
+      - ".github/workflows/task-build-test.yml"
+  pull_request:
+    branches: [ "**" ]
+    paths:
+      - "w9/d3/task&project/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore
+        run: dotnet restore "w9/d3/task&project/WebApplication1.Tests/WebApplication1.Tests.csproj"
+
+      - name: Build
+        run: dotnet build "w9/d3/task&project/WebApplication1.Tests/WebApplication1.Tests.csproj" --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test "w9/d3/task&project/WebApplication1.Tests/WebApplication1.Tests.csproj" --no-build --configuration Release --verbosity normal
