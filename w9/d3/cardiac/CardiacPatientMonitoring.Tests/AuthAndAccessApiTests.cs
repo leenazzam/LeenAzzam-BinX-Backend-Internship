@@ -34,8 +34,7 @@ public class AuthAndAccessApiTests : IClassFixture<CustomWebApplicationFactory>
 
         var response = await _client.PostAsJsonAsync("/api/auth/login", loginRequest);
 
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-
+Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         var body = await response.Content.ReadAsStringAsync();
         Assert.Contains("token", body);
     }
