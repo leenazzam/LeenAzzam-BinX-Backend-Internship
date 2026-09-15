@@ -4,12 +4,12 @@ on:
   push:
     branches: [ "**" ]
     paths:
-      - "task&project/**"
+      - "w9/d3/task&project/**"
       - ".github/workflows/task-build-test.yml"
   pull_request:
     branches: [ "**" ]
     paths:
-      - "task&project/**"
+      - "w9/d3/task&project/**"
 
 jobs:
   build:
@@ -24,10 +24,10 @@ jobs:
           dotnet-version: '9.0.x'
 
       - name: Restore
-        run: dotnet restore "task&project/WebApplication1.Tests/WebApplication1.Tests.csproj"
+        run: dotnet restore "w9/d3/task&project/WebApplication1.Tests/WebApplication1.Tests.csproj"
 
       - name: Build
-        run: dotnet build "task&project/WebApplication1.Tests/WebApplication1.Tests.csproj" --no-restore --configuration Release
+        run: dotnet build "w9/d3/task&project/WebApplication1.Tests/WebApplication1.Tests.csproj" --no-restore --configuration Release
 
       - name: Test
-        run: dotnet test "task&project/WebApplication1.Tests/WebApplication1.Tests.csproj" --no-build --configuration Release --verbosity normal
+        run: dotnet test "w9/d3/task&project/WebApplication1.Tests/WebApplication1.Tests.csproj" --no-build --configuration Release --verbosity normal
