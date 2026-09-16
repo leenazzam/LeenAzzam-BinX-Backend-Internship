@@ -1,4 +1,4 @@
-name: build-and-test-task-api
+name: Task Management CI/CD
 
 on:
   push:
@@ -6,13 +6,25 @@ on:
     paths:
       - "w9/d3/task&project/**"
       - ".github/workflows/task-build-test.yml"
+
   pull_request:
     branches: [ "**" ]
     paths:
       - "w9/d3/task&project/**"
 
+permissions:
+  contents: read
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  API_PROJECT: 'w9/d3/task&project/WebApplication1/WebApplication1.csproj'
+  TEST_PROJECT: 'w9/d3/task&project/WebApplication1.Tests/WebApplication1.Tests.csproj'
+  PUBLISH_DIR: '${{ github.workspace }}/publish'
+
 jobs:
+
   build:
+    name: Build
     runs-on: ubuntu-latest
 
     services:
@@ -22,18 +34,72 @@ jobs:
           - 6379:6379
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore
-        run: dotnet restore "w9/d3/task&project/WebApplication1.Tests/WebApplication1.Tests.csproj"
+        run: dotnet restore "${{ env.TEST_PROJECT }}"
 
       - name: Build
-        run: dotnet build "w9/d3/task&project/WebApplication1.Tests/WebApplication1.Tests.csproj" --no-restore --configuration Release
+        run: dotnet build "${{ env.TEST_PROJECT }}" --no-restore --configuration Release
 
-      - name: Test
-        run: dotnet test "w9/d3/task&project/WebApplication1.Tests/WebApplication1.Tests.csproj" --no-build --configuration Release --verbosity normal
+
+  test:
+    name: Test
+    needs: build
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore "${{ env.TEST_PROJECT }}"
+
+      - name: Run Tests
+        run: dotnet test "${{ env.TEST_PROJECT }}" --no-build --configuration Release --verbosity normal
+
+
+  deploy:
+    name: Deploy to Azure App Service
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore "${{ env.API_PROJECT }}"
+
+      - name: Publish API
+        run: dotnet publish "${{ env.API_PROJECT }}" --configuration Release --no-restore --output "${{ env.PUBLISH_DIR }}"
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ${{ env.PUBLISH_DIR }}
